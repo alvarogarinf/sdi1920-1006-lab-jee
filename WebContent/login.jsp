@@ -44,8 +44,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="password">Password:</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" name="password"
-						required="true" />
+					<input type="password" class="form-control" name="password" required="true" />
 				</div>
 			</div>
 			<div class="form-group">
