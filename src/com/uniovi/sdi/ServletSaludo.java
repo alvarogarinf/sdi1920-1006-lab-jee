@@ -6,12 +6,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Servlet implementation class ServletSaludo
  */
-@WebServlet("/ServletSaludo")
+@WebServlet("/incluirEnCarrito")
 public class ServletSaludo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	int contador = 0;
@@ -33,24 +37,44 @@ public class ServletSaludo extends HttpServlet {
 		// TODO Auto-generated method stub
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
 
+		HttpSession session=request.getSession();
+		HashMap<String,Integer> carrito =
+		(HashMap<String,Integer>) request.getSession().getAttribute("carrito");
+		// No hay carrito, creamos uno y lo insertamos en sesión
+		if (carrito == null) {
+		carrito = new HashMap<String,Integer>();
+		 request.getSession().setAttribute("carrito", carrito);
+		}
+		String producto = request.getParameter("producto");
+		if (producto != null){
+		insertarEnCarrito(carrito, producto);
+		}
+		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		out.println("<HTML>");
-		out.println("<HEAD><TITLE>Hola Mundo!</TITLE></HEAD>");
+		out.println("<HEAD><TITLE>Tienda SDI: carrito</TITLE></HEAD>");
 		out.println("<BODY>");
-		String nombre = (String) request.getParameter("nombre");
-		if (nombre != null) {
-			out.println("Hola " + nombre + "<br>");
-		}
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-		}
-		out.println("ID del hilo:" + Thread.currentThread().getId() + "<br>");
-		contador++;
-		out.println("Visitas:" + contador + "<br>");
-		out.println("</BODY></HTML>");
+		out.println(carritoEnHTML(carrito)+"<br>");
+		out.println("<a href=\"tienda.html\">Volver</a></BODY></HTML>");
 	}
+	
+	private void insertarEnCarrito(Map<String,Integer> carrito, String claveProducto) {
+		if (carrito.get(claveProducto)==null)
+			carrito.put(claveProducto,new Integer(1));
+		else {
+			int numeroArticulos = (Integer)carrito.get(claveProducto).intValue();
+			carrito.put(claveProducto, new Integer(numeroArticulos+1));
+		}
+	}
+	
+	private String carritoEnHTML(Map<String,Integer> carrito) {
+		String carritoEnHTML="";
+		for (String key:carrito.keySet())
+			carritoEnHTML+="<p>["+key+"], "+carrito.get(key)+" unidades</p>";
+		return carritoEnHTML;
+	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
