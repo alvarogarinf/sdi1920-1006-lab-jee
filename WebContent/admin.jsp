@@ -24,7 +24,6 @@
 			response.sendRedirect("login.jsp");
 		}
 	%>
-	%>
 	<%
 		if (request.getParameter("nombre") != null && request.getParameter("imagen") != null
 				&& request.getParameter("precio") != null) {
@@ -47,7 +46,6 @@
 						required="true" />
 				</div>
 			</div>
-	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-2" for="imagen">URL imagen:</label>
 		<div class="col-sm-10">
@@ -68,5 +66,6 @@
 	</div>
 	</form>
 	</div>
+
 </body>
 </html>
